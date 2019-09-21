@@ -2,6 +2,7 @@
 'use strict';
 
 var React = require("react");
+var Board$ReactHooksTemplate = require("./Board.bs.js");
 var Component1$ReactHooksTemplate = require("./Component1.bs.js");
 var Component2$ReactHooksTemplate = require("./Component2.bs.js");
 
@@ -12,7 +13,7 @@ function App(Props) {
                   message: "Hello! Click this text."
                 }), React.createElement(Component2$ReactHooksTemplate.make, {
                   greeting: "Hello!"
-                }));
+                }), React.createElement(Board$ReactHooksTemplate.make, { }));
 }
 
 var make = App;
