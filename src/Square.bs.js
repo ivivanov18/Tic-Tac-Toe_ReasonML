@@ -5,10 +5,10 @@ var React = require("react");
 
 function Square(Props) {
   var value = Props.value;
-  var onHandleClick = Props.onHandleClick;
+  var onClick = Props.onClick;
   return React.createElement("button", {
               className: "square",
-              onClick: onHandleClick
+              onClick: onClick
             }, value);
 }
 

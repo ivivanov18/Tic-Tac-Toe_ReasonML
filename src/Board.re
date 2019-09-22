@@ -1,10 +1,24 @@
 [@react.component]
 let make = () => {
-  let handleClick = i => Js.log(i);
-  let renderSquare = i =>
-    <Square value=i onHandleClick={() => handleClick(i)} />;
+  let (squares, setSquares) = React.useState(() => Array.make(9, ""));
+  let (xNext, setXNext) = React.useState(() => true);
 
-  let status = "Next player: X";
+  let handleClick = i => {
+    let newSquares = Array.copy(squares); // copy it otherwise reference is same and will not re-render
+    newSquares[i] = xNext ? "X" : "O";
+    setSquares(_ => newSquares);
+    setXNext(xNext => !xNext);
+  };
+
+  let renderSquare = i => {
+    <Square
+      value={Array.get(squares, i)}
+      onClick={_event => handleClick(i)}
+    />;
+  };
+
+  let status = "Next player: " ++ (xNext ? "X" : "O");
+
   <div>
     <div className="status"> {ReasonReact.string(status)} </div>
     <div className="board-row">
