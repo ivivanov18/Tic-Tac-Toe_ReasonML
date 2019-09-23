@@ -21,9 +21,10 @@ let rec calculateWinner = (squares, lines) => {
 
 [@react.component]
 let make = () => {
-  let (history, setHistory) = React.useState(() => [Array.make(9, "")]);
+  let (history, setHistory) = React.useState(() => [|Array.make(9, "")|]);
+  Js.log(history);
   let (xNext, setXNext) = React.useState(() => true);
-  let currentBoard = List.nth(history, List.length(history) - 1);
+  let currentBoard = history[Array.length(history) - 1];
   let winner = calculateWinner(currentBoard, winningCombinations);
   let status =
     winner != ""
@@ -35,7 +36,7 @@ let make = () => {
       ();
     } else {
       newSquares[i] = xNext ? "X" : "O";
-      setHistory(history => List.append(history, [newSquares]));
+      setHistory(his => Array.append(his, [|newSquares|]));
       setXNext(xNext => !xNext);
     };
   };
