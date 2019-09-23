@@ -7,6 +7,7 @@ var React = require("react");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
 var Board$ReactHooksTemplate = require("./Board.bs.js");
+var StartNewGameButton$ReactHooksTemplate = require("./StartNewGameButton.bs.js");
 
 var winningCombinations = /* :: */[
   /* :: */[
@@ -157,7 +158,6 @@ function Game(Props) {
         }));
   var setHistory = match[1];
   var history = match[0];
-  console.log(history);
   var match$1 = React.useState((function () {
           return true;
         }));
@@ -183,6 +183,15 @@ function Game(Props) {
                   }));
     }
   };
+  var startNewGame = function (param) {
+    Curry._1(setXNext, (function (param) {
+            return true;
+          }));
+    return Curry._1(setHistory, (function (param) {
+                  return /* array */[Caml_array.caml_make_vect(9, "")];
+                }));
+  };
+  var match$3 = winner !== "";
   return React.createElement("div", {
               className: "game"
             }, React.createElement("div", {
@@ -192,7 +201,9 @@ function Game(Props) {
                       onClickSquare: handleClick
                     })), React.createElement("div", {
                   className: "game-info"
-                }, React.createElement("div", undefined, status), React.createElement("ol", undefined)));
+                }, React.createElement("div", undefined, status), React.createElement("ol", undefined)), match$3 ? React.createElement(StartNewGameButton$ReactHooksTemplate.make, {
+                    startNewGame: startNewGame
+                  }) : null);
 }
 
 var make = Game;

@@ -22,7 +22,6 @@ let rec calculateWinner = (squares, lines) => {
 [@react.component]
 let make = () => {
   let (history, setHistory) = React.useState(() => [|Array.make(9, "")|]);
-  Js.log(history);
   let (xNext, setXNext) = React.useState(() => true);
   let currentBoard = history[Array.length(history) - 1];
   let winner = calculateWinner(currentBoard, winningCombinations);
@@ -41,6 +40,11 @@ let make = () => {
     };
   };
 
+  let startNewGame = () => {
+    setXNext(_ => true);
+    setHistory(_ => [|Array.make(9, "")|]);
+  };
+
   <div className="game">
     <div className="game-board">
       <Board squares=currentBoard onClickSquare=handleClick />
@@ -49,5 +53,6 @@ let make = () => {
       <div> {ReasonReact.string(status)} </div>
       <ol />
     </div>
+    {winner != "" ? <StartNewGameButton startNewGame /> : ReasonReact.null}
   </div>; //todo
 };
