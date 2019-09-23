@@ -5,7 +5,151 @@ var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
+var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
 var Square$ReactHooksTemplate = require("./Square.bs.js");
+
+var winningCombinations = /* :: */[
+  /* :: */[
+    0,
+    /* :: */[
+      1,
+      /* :: */[
+        2,
+        /* [] */0
+      ]
+    ]
+  ],
+  /* :: */[
+    /* :: */[
+      3,
+      /* :: */[
+        4,
+        /* :: */[
+          5,
+          /* [] */0
+        ]
+      ]
+    ],
+    /* :: */[
+      /* :: */[
+        6,
+        /* :: */[
+          7,
+          /* :: */[
+            8,
+            /* [] */0
+          ]
+        ]
+      ],
+      /* :: */[
+        /* :: */[
+          0,
+          /* :: */[
+            3,
+            /* :: */[
+              6,
+              /* [] */0
+            ]
+          ]
+        ],
+        /* :: */[
+          /* :: */[
+            1,
+            /* :: */[
+              4,
+              /* :: */[
+                7,
+                /* [] */0
+              ]
+            ]
+          ],
+          /* :: */[
+            /* :: */[
+              2,
+              /* :: */[
+                5,
+                /* :: */[
+                  8,
+                  /* [] */0
+                ]
+              ]
+            ],
+            /* :: */[
+              /* :: */[
+                0,
+                /* :: */[
+                  4,
+                  /* :: */[
+                    8,
+                    /* [] */0
+                  ]
+                ]
+              ],
+              /* :: */[
+                /* :: */[
+                  2,
+                  /* :: */[
+                    4,
+                    /* :: */[
+                      6,
+                      /* [] */0
+                    ]
+                  ]
+                ],
+                /* [] */0
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+];
+
+function calculateWinner(squares, _lines) {
+  while(true) {
+    var lines = _lines;
+    if (lines) {
+      var row = lines[0];
+      var exit = 0;
+      if (row) {
+        var match = row[1];
+        if (match) {
+          var match$1 = match[1];
+          if (match$1 && !match$1[1]) {
+            var a = row[0];
+            var match$2 = Caml_array.caml_array_get(squares, a) !== "" && Caml_array.caml_array_get(squares, a) === Caml_array.caml_array_get(squares, match[0]) && Caml_array.caml_array_get(squares, a) === Caml_array.caml_array_get(squares, match$1[0]);
+            if (match$2) {
+              return Caml_array.caml_array_get(squares, a);
+            } else {
+              _lines = lines[1];
+              continue ;
+            }
+          } else {
+            exit = 1;
+          }
+        } else {
+          exit = 1;
+        }
+      } else {
+        exit = 1;
+      }
+      if (exit === 1) {
+        throw [
+              Caml_builtin_exceptions.match_failure,
+              /* tuple */[
+                "Board.re",
+                16,
+                8
+              ]
+            ];
+      }
+      
+    } else {
+      return "";
+    }
+  };
+}
 
 function Board(Props) {
   var match = React.useState((function () {
@@ -24,19 +168,26 @@ function Board(Props) {
                 onClick: (function (_event) {
                     var i$1 = i;
                     var newSquares = $$Array.copy(squares);
-                    Caml_array.caml_array_set(newSquares, i$1, xNext ? "X" : "O");
-                    Curry._1(setSquares, (function (param) {
-                            return newSquares;
-                          }));
-                    return Curry._1(setXNext, (function (xNext) {
-                                  return !xNext;
-                                }));
+                    var winner = calculateWinner(squares, winningCombinations);
+                    if (winner !== "" || Caml_array.caml_array_get(squares, i$1) !== "") {
+                      return /* () */0;
+                    } else {
+                      Caml_array.caml_array_set(newSquares, i$1, xNext ? "X" : "O");
+                      Curry._1(setSquares, (function (param) {
+                              return newSquares;
+                            }));
+                      return Curry._1(setXNext, (function (xNext) {
+                                    return !xNext;
+                                  }));
+                    }
                   })
               });
   };
-  var status = "Next player: " + (
-    xNext ? "X" : "O"
-  );
+  var winner = calculateWinner(squares, winningCombinations);
+  var match$2 = winner !== "";
+  var status = match$2 ? "The winner is " + winner : "Next player: " + (
+      xNext ? "X" : "O"
+    );
   return React.createElement("div", undefined, React.createElement("div", {
                   className: "status"
                 }, status), React.createElement("div", {
@@ -50,5 +201,7 @@ function Board(Props) {
 
 var make = Board;
 
+exports.winningCombinations = winningCombinations;
+exports.calculateWinner = calculateWinner;
 exports.make = make;
 /* react Not a pure module */
