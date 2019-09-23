@@ -29,6 +29,28 @@ let make = () => {
     winner != ""
       ? "The winner is " ++ winner : "Next player: " ++ (xNext ? "X" : "O");
 
+  let jumpToMove = i => {
+    let historyReturnedTo =
+      i > 0 ? Array.sub(history, 0, i) : [|Array.make(9, "")|];
+    setHistory(_ => historyReturnedTo);
+  };
+
+  let moves =
+    Array.mapi(
+      (step, move) => {
+        let description =
+          step > 0
+            ? "Go back to round " ++ string_of_int(step)
+            : "Go back to beginning";
+        <li>
+          <button onClick={_event => jumpToMove(step)}>
+            {ReasonReact.string(description)}
+          </button>
+        </li>;
+      },
+      history,
+    );
+
   let handleClick = i => {
     let newSquares = Array.copy(currentBoard); // copy it otherwise reference is same and will not re-render
     if (winner != "" || currentBoard[i] != "") {
@@ -51,7 +73,7 @@ let make = () => {
     </div>
     <div className="game-info">
       <div> {ReasonReact.string(status)} </div>
-      <ol />
+      <ol> {ReasonReact.array(moves)} </ol>
     </div>
     {winner != "" ? <StartNewGameButton startNewGame /> : ReasonReact.null}
   </div>; //todo

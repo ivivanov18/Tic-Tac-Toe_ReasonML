@@ -169,6 +169,20 @@ function Game(Props) {
   var status = match$2 ? "The winner is " + winner : "Next player: " + (
       xNext ? "X" : "O"
     );
+  var moves = $$Array.mapi((function (step, move) {
+          var match = step > 0;
+          var description = match ? "Go back to round " + String(step) : "Go back to beginning";
+          return React.createElement("li", undefined, React.createElement("button", {
+                          onClick: (function (_event) {
+                              var i = step;
+                              var match = i > 0;
+                              var historyReturnedTo = match ? $$Array.sub(history, 0, i) : /* array */[Caml_array.caml_make_vect(9, "")];
+                              return Curry._1(setHistory, (function (param) {
+                                            return historyReturnedTo;
+                                          }));
+                            })
+                        }, description));
+        }), history);
   var handleClick = function (i) {
     var newSquares = $$Array.copy(currentBoard);
     if (winner !== "" || Caml_array.caml_array_get(currentBoard, i) !== "") {
@@ -201,7 +215,7 @@ function Game(Props) {
                       onClickSquare: handleClick
                     })), React.createElement("div", {
                   className: "game-info"
-                }, React.createElement("div", undefined, status), React.createElement("ol", undefined)), match$3 ? React.createElement(StartNewGameButton$ReactHooksTemplate.make, {
+                }, React.createElement("div", undefined, status), React.createElement("ol", undefined, moves)), match$3 ? React.createElement(StartNewGameButton$ReactHooksTemplate.make, {
                     startNewGame: startNewGame
                   }) : null);
 }
